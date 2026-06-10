@@ -6,5 +6,9 @@ import org.springframework.data.domain.Pageable;
 
 @Repository
 public interface CursoRepository extends JpaRepository<Cursos, Integer> {
+
+    // Catálogo con paginación (HU03)
     Page<Cursos> findByActivoTrue(Pageable pageable);
+
+    // findById(Integer) ya viene incluido por JpaRepository (lo usa HU09).
 }
