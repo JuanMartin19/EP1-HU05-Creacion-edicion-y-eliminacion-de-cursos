@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CursoDTO {
+public class CursosDTO {
 
     private Integer id;
 

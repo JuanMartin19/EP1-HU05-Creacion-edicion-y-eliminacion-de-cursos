@@ -1,12 +1,13 @@
 package com.example.equipo.controller;
 
-import com.example.equipo.dto.CursoDTO;
+import com.example.equipo.dto.CursosDTO;
 import com.example.equipo.service.CursoService;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +22,10 @@ public class CursosController {
 
     private final CursoService cursoService;
 
+    // ── Tu rama (CRUD) ────────────────────────────────────────────────────────
+
     @GetMapping("/api/cursos/listar")
-    public ResponseEntity<List<CursoDTO>> listar() {
+    public ResponseEntity<List<CursosDTO>> listar() {
         return ResponseEntity.ok(cursoService.listarTodos());
     }
 
@@ -37,14 +40,14 @@ public class CursosController {
     }
 
     @PostMapping("/api/cursos/crear")
-    public ResponseEntity<?> crear(@Valid @RequestBody CursoDTO cursoDTO) {
+    public ResponseEntity<?> crear(@Valid @RequestBody CursosDTO cursoDTO) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(cursoService.crear(cursoDTO));
     }
 
     @PutMapping("/api/cursos/editar/{id}")
     public ResponseEntity<?> actualizar(@PathVariable Integer id,
-                                        @Valid @RequestBody CursoDTO cursoDTO) {
+                                        @Valid @RequestBody CursosDTO cursoDTO) {
         try {
             return ResponseEntity.ok(cursoService.actualizar(id, cursoDTO));
         } catch (EntityNotFoundException e) {
@@ -62,5 +65,13 @@ public class CursosController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(Map.of("error", e.getMessage()));
         }
+    }
+
+    // ── Rama del compañero (catálogo paginado) ────────────────────────────────
+
+    @GetMapping("/api/cursos/catalogo")
+    public ResponseEntity<Page<CursosDTO>> getCatalogo(
+            @RequestParam(defaultValue = "0") int page) {
+        return ResponseEntity.ok(cursoService.listarCursosDisponibles(page));
     }
 }
